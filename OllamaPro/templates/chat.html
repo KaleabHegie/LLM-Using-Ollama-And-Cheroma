@@ -183,8 +183,8 @@
                           <div class="d-flex align-items-center mb-1 chat-msg">
                             <div class="flex-grow-1 me-3">
                               <div class="msg-content card mb-0">
-                                <p class="mb-0">
-                                  {{ conversation.response | safe }}
+                                <p class="mb-0 markdown">
+                                  {{ conversation.response }}
                                 </p>
                               </div>
                             </div>
@@ -273,6 +273,9 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
   $(document).ready(function () {
+    $('.markdown').each(function() {
+      $(this).html(marked.parse($(this).html()))
+    })
     const appendOut = (message) => {
       const messageOutTemplate = `
       <div class="message-out">

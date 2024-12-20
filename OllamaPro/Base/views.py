@@ -58,8 +58,7 @@ async def ask_questions(request):
                         
 
                         
-                        markdown_response = markdown  .markdown(response_data)
-                        last_question_obj.response = markdown_response
+                        last_question_obj.response = response_data
                         await sync_to_async(last_question_obj.save)()
                     except Exception as e:
                         print(f"Error during retrieval or LLM response: {e}")
