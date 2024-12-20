@@ -255,7 +255,7 @@
     var txt = "Hello, I am DPMES's AI, your intelligent assistant designed to answer your questions.Ask me questions, share your challenges, or explore ideas with me!"
     var speed = 10;
     const scrollToBottom = () => {
-      $("#conversationBody").animate({scrollTop: $('#conversationBody').get(0).scrollHeight}, 1000);
+      $('#conversationBody').scrollTop($('#conversationBody')[0].scrollHeight);
     };
 
     function typeWriter() {
@@ -273,9 +273,6 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
   $(document).ready(function () {
-    const scrollToBottom = () => {
-      $("#conversationBody").animate({scrollTop: $('#conversationBody').get(0).scrollHeight}, 1000);
-    };
     const appendOut = (message) => {
       const messageOutTemplate = `
       <div class="message-out">
@@ -361,9 +358,7 @@
           res.html(`<div>${htmlContent}</div>`);
           chunk_count++;
 
-          if(chunk_count % 50 == 0){
-            scrollToBottom()
-          }
+       
         } catch (err) {
           console.error("Error parsing data:", err);
 
