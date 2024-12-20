@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #sse-data {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Server Sent Events Example</h1>
+    <div id="sse-data">Waiting for events...</div>
+    <button id="start-btn" onclick="startSSE()">Start</button>
+    <button id="stop-btn" onclick="stopSSE()" disabled>Stop</button>
+
+    <script>
+        let eventSource;
+        const sseData = document.getElementById('sse-data');
+        const startButton = document.getElementById('start-btn');
+        const stopButton = document.getElementById('stop-btn');
+
+        function startSSE() {
+            sseData.innerHTML = 'Connecting to the server...<br>'; // Inform the user
+            eventSource = new EventSource('/stream/'); // Adjust the endpoint URL if needed
+
+            eventSource.onmessage = event => {
+                sseData.innerHTML += event.data + '<br>'; // Append each event message
+                sseData.scrollTop = sseData.scrollHeight; // Auto-scroll to the bottom
+            };
+
+            eventSource.onerror = () => {
+                sseData.innerHTML += '<span style="color:red;">Connection lost. Please try again later.</span><br>';
+                stopSSE(); // Auto-stop on error
+            };
+
+            startButton.disabled = true;
+            stopButton.disabled = false;
+        }
+
+        function stopSSE() {
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+            }
+            startButton.disabled = false;
+            stopButton.disabled = true;
+            sseData.innerHTML += '<span style="color:blue;">Connection closed.</span><br>';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,411 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<!-- [Head] start -->
+<!-- Mirrored from ableproadmin.com/application/chat.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 17 Dec 2024 13:29:54 GMT -->
+
+<head>
+  <title>Chat | Able Pro Dashboard Template</title>
+  <!-- [Meta] -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,minimal-ui" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="description"
+    content="Able Pro is trending dashboard template made using Bootstrap 5 design framework. Able Pro is available in Bootstrap, React, CodeIgniter, Angular,  and .net Technologies." />
+  <meta name="keywords"
+    content="Bootstrap admin template, Dashboard UI Kit, Dashboard Template, Backend Panel, react dashboard, angular dashboard" />
+  <meta name="author" content="Phoenixcoded" />
+  <!-- [Favicon] icon -->
+  <link rel="icon" href="https://ableproadmin.com/assets/images/favicon.svg" type="image/x-icon" />
+  <!-- [Font] Family -->
+  <link rel="stylesheet" href="{% static 'assets/fonts/inter/inter.css' %}" id="main-font-link" />
+  <!-- [phosphor Icons] https://phosphoricons.com/ -->
+  <link rel="stylesheet" href="{% static 'assets/fonts/phosphor/duotone/style.css' %}" />
+  <!-- [Tabler Icons] https://tablericons.com -->
+  <link rel="stylesheet" href="{% static 'assets/fonts/tabler-icons.min.css' %}" />
+  <!-- [Feather Icons] https://feathericons.com -->
+  <link rel="stylesheet" href="{% static 'assets/fonts/feather.css' %}" />
+  <!-- [Font Awesome Icons] https://fontawesome.com/icons -->
+  <link rel="stylesheet" href="{% static 'assets/fonts/fontawesome.css' %}" />
+  <!-- [Material Icons] https://fonts.google.com/icons -->
+  <link rel="stylesheet" href="{% static 'assets/fonts/material.css' %}" />
+  <!-- [Template CSS Files] -->
+  <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" id="main-style-link" />
+  <script src="{% static 'assets/js/tech-stack.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'assets/css/style-preset.css' %}" />
+</head><!-- [Head] end --><!-- [Body] Start -->
+<style>
+  .formatted {
+    white-space: pre-line;
+  }
+
+  #spinner {
+    margin: 0;
+    width: 40px;
+    text-align: center;
+  }
+
+  #spinner>div {
+    width: 10px;
+    height: 10px;
+    background-color: #C1DC58;
+
+    border-radius: 100%;
+    display: inline-block;
+    -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+    animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  }
+
+  #spinner .bounce1 {
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+  }
+
+  #spinner .bounce2 {
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+  }
+
+  @-webkit-keyframes sk-bouncedelay {
+
+    0%,
+    80%,
+    100% {
+      -webkit-transform: scale(0)
+    }
+
+    40% {
+      -webkit-transform: scale(1.0)
+    }
+  }
+
+  @keyframes sk-bouncedelay {
+
+    0%,
+    80%,
+    100% {
+      -webkit-transform: scale(0);
+      transform: scale(0);
+    }
+
+    40% {
+      -webkit-transform: scale(1.0);
+      transform: scale(1.0);
+    }
+  }
+  .scrollable {
+    max-height: 70vh;
+    /* replace 500px with your desired maximum width */
+    overflow-y: auto;
+    /* enable 
+    horizontal scrolling */
+  }
+
+
+  .vertical-text {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    text-orientation: sideways-right;
+    white-space: nowrap;
+    width: 100%;
+    text-align: center;
+  }
+</style>
+
+<body data-pc-preset="preset-1" data-pc-sidebar-caption="true" data-pc-layout="vertical" data-pc-direction="ltr"
+  data-pc-theme_contrast="" data-pc-theme="light">
+  <div class="row container-sm mx-auto d-block" style="margin-top: 30px;">
+    <!-- [ sample-page ] start -->
+    <div class="col-sm-8 mx-auto d-block">
+      <div class="chat-wrapper">
+        <div class="chat-content">
+          <div class="card mb-0">
+
+
+            <div class="card-header p-3">
+              <div class="d-flex align-items-center">
+                <ul class="list-inline me-auto mb-0">
+                  <li class="list-inline-item">
+                    <div class="d-flex align-items-center">
+                      <div class="chat-avtar">
+                        <img class="rounded-circle img-fluid wid-40"
+                          src="{% static 'assets/images/user/users-avatar.jpg' %}" alt="User image" />
+                        <i class="chat-badge bg-success"></i>
+                      </div>
+                      <div class="flex-grow-1 mx-3 d-none d-sm-inline-block">
+                        <h6 class="mb-0">User</h6>
+                        <span class="text-sm text-muted">Super User</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+
+              </div>
+            </div>
+
+
+
+            <div class="scroll-block chat-message" id="conv-body" style="height: 70vh;">
+              <div id="conversationBody" class="card-body scrollable">
+    
+                {% for conversation in user_coversation %}
+                <div class="message-out">
+                  <div class="d-flex align-items-end flex-column">
+                    <p class="mb-1 text-muted"><small>Just now</small></p>
+                    <div class="message d-flex align-items-end flex-column">
+                      <div class="d-flex align-items-center mb-1 chat-msg">
+                        <div class="flex-grow-1 ms-3">
+                          <div class="msg-content bg-primary">
+                            <p class="mb-0">
+                              {{ conversation.question }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="message-in">
+                  <div class="d-flex">
+                    <div class="flex-shrink-0">
+                      <div class="chat-avtar">
+                        <img class="rounded-circle img-fluid wid-40"
+                          src="{% static 'assets/images/user/boot-avatar.jpg' %}" alt="User image" />
+                        <i class="chat-badge bg-success"></i>
+                      </div>
+                    </div>
+                    <div class="flex-grow-1 mx-3">
+                      <div class="d-flex align-items-start flex-column">
+                        <p class="mb-1 text-muted">
+                          Bot <small>11:23 AM</small>
+                        </p>
+                        <div class="message d-flex align-items-start flex-column">
+                          <div class="d-flex align-items-center mb-1 chat-msg">
+                            <div class="flex-grow-1 me-3">
+                              <div class="msg-content card mb-0">
+                                <p class="mb-0">
+                                  {{ conversation.response | safe }}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                <div class="message-in">
+                  <div class="d-flex">
+                    <div class="flex-shrink-0">
+                      <div class="chat-avtar">
+                        <img class="rounded-circle img-fluid wid-40"
+                          src="{% static 'assets/images/user/boot-avatar.jpg' %}" alt="User image" />
+                        <i class="chat-badge bg-success"></i>
+                      </div>
+                    </div>
+                    <div class="flex-grow-1 mx-3">
+                      <div class="d-flex align-items-start flex-column">
+                        <p class="mb-1 text-muted">
+                          Bot <small>11:23 AM</small>
+                        </p>
+                        <div class="message d-flex align-items-start flex-column">
+                          <div class="d-flex align-items-center mb-1 chat-msg">
+                            <div class="flex-grow-1 me-3">
+                              <div class="msg-content card mb-0">
+                                <p id="intro_text" class="mb-0 typing-effect">
+
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
+            <div class="card-footer py-2 px-3">
+              <textarea class="form-control border-2 shadow-none" placeholder="Ask me a question!" id="questionText"
+                rows="1"></textarea>
+              <div class="d-grid gap-2 m-3  mx-auto">
+                <button id="quesionSubmit" class="btn btn-primary">Ask</button>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- [ sample-page ] end -->
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+  <script>
+
+    var i = 0;
+    var txt = "Hello, I am DPMES's AI, your intelligent assistant designed to answer your questions.Ask me questions, share your challenges, or explore ideas with me!"
+    var speed = 10;
+    const scrollToBottom = () => {
+      $("#conversationBody").animate({scrollTop: $('#conversationBody').get(0).scrollHeight}, 1000);
+    };
+
+    function typeWriter() {
+      if (i < txt.length) {
+        $("#intro_text").append(txt.charAt(i))
+        i++;
+        setTimeout(typeWriter, speed);
+      }
+      scrollToBottom()
+    }
+    typeWriter()
+  </script>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  $(document).ready(function () {
+    const scrollToBottom = () => {
+      $("#conversationBody").animate({scrollTop: $('#conversationBody').get(0).scrollHeight}, 1000);
+    };
+    const appendOut = (message) => {
+      const messageOutTemplate = `
+      <div class="message-out">
+        <div class="d-flex align-items-end flex-column">
+          <p class="mb-1 text-muted"><small>Just now</small></p>
+          <div class="message d-flex align-items-end flex-column">
+            <div class="d-flex align-items-center mb-1 chat-msg">
+              <div class="flex-grow-1 ms-3">
+                <div class="msg-content bg-primary">
+                  <p class="mb-0">${message}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+      $("#conversationBody").append(messageOutTemplate);
+    };
+
+    const appendResponse = (message, obj_id) => {
+      const messageResponseTemplate = `
+      <div class="message-in">
+        <div class="d-flex">
+         <div class="flex-shrink-0">
+            <div class="chat-avtar">
+              <img
+                class="rounded-circle img-fluid wid-40"
+                src="{% static 'assets/images/user/boot-avatar.jpg' %}"
+                alt="User image"
+              />
+              <i class="chat-badge bg-success"></i>
+            </div>
+          </div>
+          <div class="flex-grow-1 mx-3">
+            <div class="d-flex align-items-start flex-column">
+              <p class="mb-1 text-muted">Bot</p>
+              <div class="message d-flex align-items-start flex-column">
+                <div class="msg-content card mb-0">
+                      <div id="spinner">
+                           <div class="bounce1"></div>
+                           <div class="bounce2"></div>
+                           <div class="bounce3"></div>
+                      </div>
+                  <p class="mb-0 formatted" id="res_${obj_id}">${message} 
+                         
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+      $("#conversationBody").append(messageResponseTemplate);
+    };
+
+    const startSSE = (obj_id) => {
+      appendResponse('', obj_id); // Show "Loading" with three dots initially
+      const res = $(`#res_${obj_id}`);
+      const eventSource = new EventSource("{% url 'ask_questions' %}"); // Backend SSE URL
+      let markdownBuffer = ""; // Buffer to hold markdown chunks
+      let chunk_count = 0
+    
+
+      eventSource.onmessage = (event) => {
+        $(`#spinner`).remove(); // Remove spinner on first response
+  
+        
+
+        try {
+          // Parse the incoming JSON data
+          const parsed = JSON.parse(event.data);
+          if (parsed.done) {
+            eventSource.close(); // Close the connection
+            return; // Exit early since no further processing is needed
+          }
+          markdownBuffer += parsed.chunk;
+
+          // Convert the combined Markdown to HTML
+          const htmlContent = marked.parse(markdownBuffer);
+
+          // Replace the content in the response container
+
+          res.html(`<div>${htmlContent}</div>`);
+          chunk_count++;
+
+          if(chunk_count % 50 == 0){
+            scrollToBottom()
+          }
+        } catch (err) {
+          console.error("Error parsing data:", err);
+
+        }
+
+      };
+
+      eventSource.onerror = (event) => {
+        appendResponse("Error occurred. Try again.", obj_id)
+        eventSource.close(); // Close the connection on error
+      };
+    };
+    $("#quesionSubmit").on("click", function () {
+      const question = $("#questionText").val().trim();
+      if (!question) {
+        alert("Please enter a question!");
+        return;
+      }
+
+      appendOut(question);
+      $("#questionText").val("");
+      scrollToBottom()
+
+      $.ajax({
+        type: "POST",
+        url: "{% url 'ask_questions' %}",
+        data: {
+          question: question,
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        success: function (response) {
+          if (response.status === "ok") {
+            startSSE(response.obj_id);
+          }
+        },
+        error: function () {
+          appendResponse("Error occurred while submitting the question.");
+        },
+      });
+    });
+  });
+
+</script>
+
+</html>

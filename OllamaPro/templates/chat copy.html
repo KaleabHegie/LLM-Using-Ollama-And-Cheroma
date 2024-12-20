@@ -1,0 +1,299 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <!-- [Head] start -->
+  <!-- Mirrored from ableproadmin.com/application/chat.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 17 Dec 2024 13:29:54 GMT -->
+  <head>
+    <title>Chat | Able Pro Dashboard Template</title>
+    <!-- [Meta] -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,user-scalable=0,minimal-ui"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="description"
+      content="Able Pro is trending dashboard template made using Bootstrap 5 design framework. Able Pro is available in Bootstrap, React, CodeIgniter, Angular,  and .net Technologies."
+    />
+    <meta
+      name="keywords"
+      content="Bootstrap admin template, Dashboard UI Kit, Dashboard Template, Backend Panel, react dashboard, angular dashboard"
+    />
+    <meta name="author" content="Phoenixcoded" />
+    <!-- [Favicon] icon -->
+    <link
+      rel="icon"
+      href="https://ableproadmin.com/assets/images/favicon.svg"
+      type="image/x-icon"
+    />
+    <!-- [Font] Family -->
+    <link
+      rel="stylesheet"
+      href="{% static 'assets/fonts/inter/inter.css' %}"
+      id="main-font-link"
+    />
+    <!-- [phosphor Icons] https://phosphoricons.com/ -->
+    <link rel="stylesheet" href="{% static 'assets/fonts/phosphor/duotone/style.css' %}" />
+    <!-- [Tabler Icons] https://tablericons.com -->
+    <link rel="stylesheet" href="{% static 'assets/fonts/tabler-icons.min.css' %}" />
+    <!-- [Feather Icons] https://feathericons.com -->
+    <link rel="stylesheet" href="{% static 'assets/fonts/feather.css' %}" />
+    <!-- [Font Awesome Icons] https://fontawesome.com/icons -->
+    <link rel="stylesheet" href="{% static 'assets/fonts/fontawesome.css' %}" />
+    <!-- [Material Icons] https://fonts.google.com/icons -->
+    <link rel="stylesheet" href="{% static 'assets/fonts/material.css' %}" />
+    <!-- [Template CSS Files] -->
+    <link
+      rel="stylesheet"
+      href="{% static 'assets/css/style.css' %}"
+      id="main-style-link"
+    />
+    <script src="{% static 'assets/js/tech-stack.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'assets/css/style-preset.css' %}" /></head
+  ><!-- [Head] end --><!-- [Body] Start -->
+  <style>
+    .formatted {
+        white-space: pre-line;
+    }
+</style>
+  <body
+    data-pc-preset="preset-1"
+    data-pc-sidebar-caption="true"
+    data-pc-layout="vertical"
+    data-pc-direction="ltr"
+    data-pc-theme_contrast=""
+    data-pc-theme="light"
+  >
+  <div class="row container-sm mx-auto d-block" style="margin-top: 30px;">
+    <!-- [ sample-page ] start -->
+    <div class="col-sm-8 mx-auto d-block">
+      <div class="chat-wrapper">
+        <div class="chat-content">
+          <div class="card mb-0">
+
+
+            <div class="card-header p-3">
+              <div class="d-flex align-items-center">
+                <ul class="list-inline me-auto mb-0">
+                  <li class="list-inline-item">
+                    <div class="d-flex align-items-center">
+                      <div class="chat-avtar">
+                        <img
+                          class="rounded-circle img-fluid wid-40"
+                          src="{% static 'assets/images/user/users-avatar.jpg' %}"
+                          alt="User image"
+                        />
+                        <i class="chat-badge bg-success"></i>
+                      </div>
+                      <div
+                        class="flex-grow-1 mx-3 d-none d-sm-inline-block"
+                      >
+                        <h6 class="mb-0">User</h6>
+                        <span class="text-sm text-muted"
+                          >Super User</span
+                        >
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+               
+              </div>
+            </div>
+
+
+
+            <div class="scroll-block chat-message">
+              <div id="conversationBody" class="card-body">
+
+                <div class="message-out">
+                  <div class="d-flex align-items-end flex-column">
+                    <p class="mb-1 text-muted"><small>9h ago</small></p>
+                    <div
+                      class="message d-flex align-items-end flex-column"
+                    >
+                      <div
+                        class="d-flex align-items-center mb-1 chat-msg"
+                      >
+                        <div class="flex-grow-1 ms-3">
+                          <div class="msg-content bg-primary">
+                            <p class="mb-0">What is the gdp of ethopia in from 2016-2022?</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="message-in">
+                  <div class="d-flex">
+                    <div class="flex-shrink-0">
+                      <div class="chat-avtar">
+                        <img
+                          class="rounded-circle img-fluid wid-40"
+                          src="{% static 'assets/images/user/boot-avatar.jpg' %}"
+                          alt="User image"
+                        />
+                        <i class="chat-badge bg-success"></i>
+                      </div>
+                    </div>
+                    <div class="flex-grow-1 mx-3">
+                      <div class="d-flex align-items-start flex-column">
+                        <p class="mb-1 text-muted">
+                          Bot <small>11:23 AM</small>
+                        </p>
+                        <div
+                          class="message d-flex align-items-start flex-column"
+                        >
+                          <div
+                            class="d-flex align-items-center mb-1 chat-msg"
+                          >
+                            <div class="flex-grow-1 me-3">
+                              <div class="msg-content card mb-0">
+                                <p class="mb-0">These figures indicate a steady increase in Ethiopia's GDP over the years, reflecting the country's economic growth during this period. 
+                                  MACROTRENDS
+                                  
+                                  It's important to note that while the GDP has been growing, the growth rate has experienced some fluctuations, with a general trend of deceleration in recent years. 
+                                  MACROTRENDS
+                                  
+                                  For more detailed information and additional economic indicators, you can refer to the World Bank's overview of Ethiopia.</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+
+
+            <div class="card-footer py-2 px-3">
+              <textarea
+              class="form-control border-2 shadow-none"
+              placeholder="Ask me a question!"
+              id="questionText"
+              rows="4"
+            ></textarea>
+            <div class="d-grid gap-2 m-2">
+              <button id="quesionSubmit" class="btn btn-primary">Ask</button>
+            </div>
+        
+             
+            </div>
+          </div>
+        </div>
+      
+      </div>
+    </div>
+    <!-- [ sample-page ] end -->
+  </div>
+    <script src="{% static 'assets/js/plugins/simplebar.min.js' %}"></script>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      // scroll-block
+      var tc = document.querySelectorAll(".scroll-block");
+      for (var t = 0; t < tc.length; t++) {
+        new SimpleBar(tc[t]);
+      }
+      setTimeout(function () {
+        var element = document.querySelector(
+          ".chat-content .scroll-block .simplebar-content-wrapper"
+        );
+        var elementheight = document.querySelector(
+          ".chat-content .scroll-block .simplebar-content"
+        );
+        var off = elementheight.getBoundingClientRect();
+        var h = off.height;
+        element.scrollTop += h;
+      }, 100);
+    </script>
+   
+  </body>
+ <script>
+   $(document).ready(function () {
+  const appendOut = (message) => {
+    const messageOutTemplate = `
+      <div class="message-out">
+        <div class="d-flex align-items-end flex-column">
+          <p class="mb-1 text-muted"><small>Just now</small></p>
+          <div class="message d-flex align-items-end flex-column">
+            <div class="d-flex align-items-center mb-1 chat-msg">
+              <div class="flex-grow-1 ms-3">
+                <div class="msg-content bg-primary">
+                  <p class="mb-0">${message}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    $("#conversationBody").append(messageOutTemplate);
+  };
+
+  const appendResponse = (message) => {
+    const messageResponseTemplate = `
+      <div class="message-in">
+        <div class="d-flex">
+          <div class="flex-grow-1 mx-3">
+            <div class="d-flex align-items-start flex-column">
+              <p class="mb-1 text-muted">Bot</p>
+              <div class="message d-flex align-items-start flex-column">
+                <div class="msg-content card mb-0">
+                  <p class="mb-0 formatted" id="res_1">${message}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    $("#conversationBody").append(messageResponseTemplate);
+  };
+
+  const startSSE = () => {
+    appendResponse('');
+    const res_1 = $('#res_1')
+    const eventSource = new EventSource("{% url 'ask_questions' %}");
+    eventSource.onmessage = (event) => {
+      console.log(event.data)
+      res_1.append(event.data)
+    };
+    eventSource.onerror = () => {
+      appendResponse("Error occurred. Try again.");
+      eventSource.close();
+    };
+  };
+
+  $("#quesionSubmit").on("click", function () {
+    const question = $("#questionText").val().trim();
+    if (!question) {
+      alert("Please enter a question!");
+      return;
+    }
+
+    appendOut(question);
+    $("#questionText").val("");
+
+    $.ajax({
+      type: "POST",
+      url: "{% url 'ask_questions' %}",
+      data: {
+        question: question,
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      },
+      success: function (response) {
+        if (response.status === "ok") {
+          startSSE();  
+        }
+      },
+      error: function () {
+        appendResponse("Error occurred while submitting the question.");
+      },
+    });
+  });
+});
+
+ </script>  
+</html>
