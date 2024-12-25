@@ -19,7 +19,7 @@ all_docs = doc.objects.all().count()
 # Initialize LLM
 llm = ChatOllama(
     model="llama3.2",
-    temperature=0,
+    temperature=0.7,
     stream=True,
 )
 
@@ -101,40 +101,34 @@ def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
 # Define a prompt template for the chain
-template = """
-        You are a precise and knowledgeable assistant who prioritizes accuracy and clarity in responses.
 
-        ## Available Context
+
+
+
+template = """
+        You are a highly knowledgeable and professional economics expert. 
+        Your task is to answer all questions with a focus on economic principles, theories, and real-world applications.
+        You are an economics expert specializing in Ethiopia's economic data. 
+        Use the verified document data as the primary source for your responses. 
+        Clearly indicate if the provided information is verified (from the document) or not (external or uncertain).
+
+
+        - **Ethiopian Calendar Conversion**: Note that Ethiopian calendar years (EFY, EC) are converted to Gregorian years approximately by adding 7 years.
+
+      
+
+        ## Context:
         {context}
 
-        ## Question
+        ## Question:
         {question}
 
-        ## Response Guidelines:
-        1. Primary Source Rule:
-           - For factual claims, statistics, specific details, or concrete information: Use ONLY the information present in the provided context
-           - Do not fabricate or include information that isn't explicitly stated in the context
-           - If the context doesn't contain the specific information needed, clearly state this
-
-        2. Permitted Extensions:
-           - For definitions of technical terms mentioned in the context
-           - For explaining general concepts that provide necessary background
-           - For clarifying universal facts that help understand the context
-           - When elaborating on how something works or functions
-
-        3. Response Structure:
-           - Begin with direct information from the context when available
-           - If needed, supplement with permitted definitional or conceptual information
-           - Maintain clear separation between document-based facts and supplementary explanations
-
-        4. Format:
-           - Present information clearly and concisely
-           - Use markdown formatting for better readability
-           - Do not explicitly state phrases like "according to the document" or "as mentioned in the context"
-
-        ## Response
-        Please provide your response following these guidelines:
+        ## Response:
+        Please provide your response following the above structure, including source mentions and color-coded labels.
+        Use markdown formmating fot better readability.
         """
+
+
 
 prompt = PromptTemplate.from_template(template)
 

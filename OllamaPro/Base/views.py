@@ -5,30 +5,48 @@ from .ollama_doc_init import chain
 from django.views.decorators.csrf import csrf_exempt
 from asgiref.sync import sync_to_async
 import asyncio
-from .models import QuestionHistory
+from .models import QuestionHistory, ChatInstance
 import json
 import markdown   
 
-async def ask_questions(request):
+async def ask_questions(request, id):
+    
     """
     Handles both POST (question submission) and GET (server-sent events) methods.
     """
+
+    try:
+        instance = await sync_to_async(ChatInstance.objects.get)(id=id)
+    except ChatInstance.DoesNotExist:
+        return HttpResponse('Page not found!')
+    
+    
 
     if request.method == 'POST':
         
         question = request.POST.get('question', '').strip()
         try:
+              
              # Convert to sync to perform ORM operations
               created_obj = await sync_to_async(QuestionHistory.objects.create)(
                  question=question,
-                 user=request.user
+                 instance = instance
              )
+              
               created_obj_id = created_obj.id
+              
+              if(not instance.title):
+                msg = await sync_to_async(QuestionHistory.objects.filter(instance = instance).first)()
+                instance.title = msg.question
+                await sync_to_async(instance.save)()
+
+              none_instances = await sync_to_async(ChatInstance.objects.filter)(title=None)
+              await sync_to_async(none_instances.delete)()
+
+              
         except Exception as e:
              return JsonResponse({"error": f"Failed to save question: {str(e)}"}, status=500)
 
-       
-    
         if not question:
             return JsonResponse({"error": "Question not provided"}, status=400)
 
@@ -42,7 +60,7 @@ async def ask_questions(request):
         async def event_stream():
             try:
                 # Simulate streaming response
-                last_question_obj = await sync_to_async(QuestionHistory.objects.last)()
+                last_question_obj = await sync_to_async(QuestionHistory.objects.filter(instance = instance).last)()
                 if last_question_obj:
                     query = last_question_obj.question
                     try:
@@ -78,9 +96,25 @@ async def ask_questions(request):
 
     return HttpResponse('Working')
 
-def chat(request):
-    user_coversation = QuestionHistory.objects.filter(user=request.user)
+def chat(request, id=None):
+    chat_instances = ChatInstance.objects.filter(user=request.user)
+    is_new = False
+    try:
+        if(id == 0):
+            instance = ChatInstance()
+            instance.user = request.user
+            instance.save()
+            is_new = True
+        else:
+            instance = ChatInstance.objects.get(id=id)
+        histories = QuestionHistory.objects.filter(instance = instance)
+    except ChatInstance.DoesNotExist:
+        return HttpResponse('Page not found!')
     context = {
-        'user_coversation' : user_coversation
+        'chat_instances' : chat_instances,
+        'instance' : instance,
+        'user_coversation' : histories,
+        'is_new' : is_new
+        
         }
     return render(request , 'chat.html' , context)

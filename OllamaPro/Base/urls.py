@@ -1,8 +1,8 @@
 from django.urls import path, include
-from .views import *
+from .views import ask_questions , chat
 
 
 urlpatterns = [
-    path('', ask_questions , name='ask_questions'),
-    path('chat/' , chat , name='chat'),
+    path('<int:id>', ask_questions , name='ask_questions'),
+    path('chat/<int:id>' , chat , name='chat'),
 ]
