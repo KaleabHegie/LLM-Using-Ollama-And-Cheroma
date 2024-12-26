@@ -11,7 +11,7 @@ import asyncio
 from multiprocessing import Pool
 from .models import Document as doc
 from .models import LoadedFile
-doc_data = doc.objects.all()
+doc_data = doc.objects.filter(is_loaded = False)
 
 all_docs = doc.objects.all().count()
 
@@ -41,7 +41,7 @@ vector_store = Chroma(
 # Initialize text splitter
 text_splitter = RecursiveCharacterTextSplitter(
     chunk_size=500,  # Number of characters per chunk
-    chunk_overlap=50,  # Overlap between chunks to maintain context
+    chunk_overlap=250,  # Overlap between chunks to maintain context
 )
 
 
@@ -62,7 +62,7 @@ if not os.path.exists(persist_directory) or vector_store._collection.count() == 
         Loads and splits documents into chunks using the text splitter.
         """
         try:
-            print("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+            print("document loading -----> ", to_be_loaded_doc.file.path)
 
             loader = PyMuPDFLoader(to_be_loaded_doc.file.path)
             raw_docs = loader.lazy_load()
@@ -77,6 +77,8 @@ if not os.path.exists(persist_directory) or vector_store._collection.count() == 
             # Add documents to the vector store and persist data
             try:
                 vector_store.add_documents(documents=documents, ids=document_ids)
+                to_be_loaded_doc.is_loaded = True
+                to_be_loaded_doc.save()
                 print("Documents added successfully and persisted!")
             except Exception as e:
                 print(f"Error adding documents to vector store: {e}")
@@ -98,6 +100,7 @@ retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={"
 
 # Set up document formatting
 def format_docs(docs):
+    print(docs)
     return "\n\n".join(doc.page_content for doc in docs)
 
 # Define a prompt template for the chain
@@ -108,7 +111,8 @@ def format_docs(docs):
 template = """
         You are a highly knowledgeable and professional economics expert. 
         Your task is to answer all questions with a focus on economic principles, theories, and real-world applications.
-        You are an economics expert specializing in Ethiopia's economic data. 
+        You are an economics expert specializing in Ethiopia's economic data.
+        Do not display any formula details. 
         Use the verified document data as the primary source for your responses. 
         Clearly indicate if the provided information is verified (from the document) or not (external or uncertain).
 
@@ -125,7 +129,11 @@ template = """
 
         ## Response:
         Please provide your response following the above structure, including source mentions and color-coded labels.
-        Use markdown formmating fot better readability.
+        Enhance this template to ensure all responses are returned in HTML format. Use appropriate HTML tags for structure:
+        Use <h3> for headings.
+        Use <p> for body text.
+        Use <ul> and <li> for listing items.
+        For better structure and readability in table-based responses, wrap the <table> element inside a <div class="table-responsive"> container. This ensures the table is scrollable on smaller screens. Use the <table class="table"> for styling, include a <thead> section for the table header, and make sure to close the </div> at the end for proper layout.
         """
 
 
@@ -135,10 +143,11 @@ prompt = PromptTemplate.from_template(template)
 # Build the chain of operations
 chain = (
     {
-        'context': retriever | format_docs,
-        'question': RunnablePassthrough(),
+        'context': retriever | format_docs,  # Retrieve and format relevant context
+        'question': RunnablePassthrough(),  # Pass user query
     }
-    | prompt
-    | llm
-    | StrOutputParser()
+    | prompt  # Combine inputs into a single prompt
+    | llm  # Get response from the model
+    | StrOutputParser()  # Parse the response
 )
+

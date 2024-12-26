@@ -34,6 +34,8 @@
   <script src="{% static 'assets/js/tech-stack.js' %}"></script>
   <link rel="stylesheet" href="{% static 'assets/css/style-preset.css' %}" />
 </head><!-- [Head] end --><!-- [Body] Start -->
+
+
 <style>
   .formatted {
     white-space: pre-line;
@@ -94,7 +96,7 @@
     }
   }
   .scrollable {
-    max-height: 70vh;
+    max-height: 60vh;
     /* replace 500px with your desired maximum width */
     overflow-y: auto;
     /* enable 
@@ -185,13 +187,13 @@
 
 
 
-            <div class="scroll-block chat-message" id="conv-body" style="height: 70vh;">
+            <div class="scroll-block chat-message" id="conv-body" style="height: 60vh;">
               <div id="conversationBody" class="card-body scrollable">
     
                 {% for conversation in user_coversation %}
                 <div class="message-out">
                   <div class="d-flex align-items-end flex-column">
-                    <p class="mb-1 text-muted"><small>Just now</small></p>
+                    <p class="mb-1 text-muted"><small>{{conversation.created_at}}</small></p>
                     <div class="message d-flex align-items-end flex-column">
                       <div class="d-flex align-items-center mb-1 chat-msg">
                         <div class="flex-grow-1 ms-3">
@@ -205,8 +207,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="message-in">
-                  <div class="d-flex">
+                <div class="message-in" >
+                  <div class="d-flex" >
                     <div class="flex-shrink-0">
                       <div class="chat-avtar">
                         <img class="rounded-circle img-fluid wid-40"
@@ -215,17 +217,17 @@
                       </div>
                     </div>
                     <div class="flex-grow-1 mx-3">
-                      <div class="d-flex align-items-start flex-column">
+                      <div class="d-flex align-items-start flex-column" >
                         <p class="mb-1 text-muted">
-                          Bot <small>11:23 AM</small>
+                          Bot <small>{{conversation.response_at}}</small>
                         </p>
-                        <div class="message d-flex align-items-start flex-column">
+                        <div class="message d-flex align-items-start flex-column" >
                           <div class="d-flex align-items-center mb-1 chat-msg">
                             <div class="flex-grow-1 me-3">
                               <div class="msg-content card mb-0">
-                                <p class="mb-0 markdown">
-                                  {{ conversation.response }}
-                                </p>
+                                <div class="mb-0 markdown">
+                                  {{ conversation.response | safe }}
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -249,7 +251,7 @@
                     <div class="flex-grow-1 mx-3">
                       <div class="d-flex align-items-start flex-column">
                         <p class="mb-1 text-muted">
-                          Bot <small>11:23 AM</small>
+                          Bot <small></small>
                         </p>
                         <div class="message d-flex align-items-start flex-column">
                           <div class="d-flex align-items-center mb-1 chat-msg">
@@ -273,8 +275,8 @@
 
 
             <div class="card-footer py-2 px-3">
-              <textarea class="form-control border-2 shadow-none p-3" placeholder="Ask me a question!" id="questionText"
-                rows="1"></textarea>
+              <textarea class="form-control border-2 shadow-none p-4" placeholder="Ask me a question!" id="questionText"
+                rows="3"></textarea>
               <div class="d-grid gap-2 m-3  mx-auto">
                 <button id="quesionSubmit" class="btn btn-primary">Ask</button>
               </div>
@@ -314,11 +316,31 @@
 
 </body>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+
+
+
+
+
 <script>
   $(document).ready(function () {
-    $('.markdown').each(function() {
-      $(this).html(marked.parse($(this).html()))
-    })
+    $('.markdow111n').each(function () {
+  const html = $(this).html();
+
+  const file = unified()
+  .use(remarkParse)
+  .use(remarkHtml)
+  .process(read(html))
+
+
+$(this).html(file)
+
+
+}
+
+
+);
+
     const appendOut = (message) => {
       const messageOutTemplate = `
       <div class="message-out">
@@ -401,7 +423,8 @@
 
           // Replace the content in the response container
 
-          res.html(`<div>${htmlContent}</div>`);
+          // res.html(`<div>${htmlContent}</div>`);
+          res.html(markdownBuffer)
           chunk_count++;
 
        

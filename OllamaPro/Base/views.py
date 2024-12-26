@@ -1,13 +1,14 @@
 from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse , StreamingHttpResponse
 from rest_framework import status
-from .ollama_doc_init import chain
+from .ollama_doc_init import chain, retriever
 from django.views.decorators.csrf import csrf_exempt
 from asgiref.sync import sync_to_async
 import asyncio
 from .models import QuestionHistory, ChatInstance
 import json
-import markdown   
+from langchain_core.messages import SystemMessage
+
 
 async def ask_questions(request, id):
     
@@ -20,6 +21,32 @@ async def ask_questions(request, id):
     except ChatInstance.DoesNotExist:
         return HttpResponse('Page not found!')
     
+
+    def format_docs_new(docs):
+        return "\n\n".join(f"{doc['role']}: {doc['content']}" for doc in docs if doc.get('content') != 'None')
+
+
+    async def get_full_history():
+        """
+        Fetch all previous messages to build the conversation context.
+        """
+        # Fetch history asynchronously
+        history = await sync_to_async(list)(
+            QuestionHistory.objects.filter(instance=instance, response__isnull = False).order_by("created_at")
+        )
+
+       
+
+        
+        # Build conversation history
+        conversation_list = []
+        for record in history:
+            conversation_list.append({"role": "user", "content": record.question})
+            conversation_list.append({"role": "assistant", "content": record.response})
+        
+
+        return conversation_list
+    
     
 
     if request.method == 'POST':
@@ -29,8 +56,8 @@ async def ask_questions(request, id):
               
              # Convert to sync to perform ORM operations
               created_obj = await sync_to_async(QuestionHistory.objects.create)(
-                 question=question,
-                 instance = instance
+                question=question,
+                instance = instance,
              )
               
               created_obj_id = created_obj.id
@@ -63,23 +90,29 @@ async def ask_questions(request, id):
                 last_question_obj = await sync_to_async(QuestionHistory.objects.filter(instance = instance).last)()
                 if last_question_obj:
                     query = last_question_obj.question
-                    try:
-                        response_data = ''
-                        for chunk in chain.stream(query):  # Pass query as a string
-                           formatted_chunk = json.dumps({"chunk" : chunk })
-                           response_data = response_data + chunk
-                           yield f"data: {formatted_chunk}\n\n"
-                           await asyncio.sleep(0.01)
-                        
-                        formatted_chunk = json.dumps({"done" : True })
-                        yield f"data: {formatted_chunk}\n\n"
-                        
+                    
+                    conversation_history = await get_full_history()
+                    conversation_history.append({"role": "user", "content": query})
+                    llm_history = format_docs_new(conversation_history) or query
+                    # Ensure you're passing the correct input to the chain
+                    response_data = ""
+                    
+                    print("printing...", llm_history)
+                  
+                    
+                    for chunk in chain.stream(llm_history):  # Pass query as a string
+                       formatted_chunk = json.dumps({"chunk" : chunk })
+                       response_data = response_data + chunk
+                       yield f"data: {formatted_chunk}\n\n"
+                       await asyncio.sleep(0.01)
+                    
+                    formatted_chunk = json.dumps({"done" : True })
+                    yield f"data: {formatted_chunk}\n\n"
+                    
+                    
+                    last_question_obj.response = response_data
+                    await sync_to_async(last_question_obj.save)()
 
-                        
-                        last_question_obj.response = response_data
-                        await sync_to_async(last_question_obj.save)()
-                    except Exception as e:
-                        print(f"Error during retrieval or LLM response: {e}")
                 else:
                     yield "data: No previous questions found\n\n"
             except Exception as e:
