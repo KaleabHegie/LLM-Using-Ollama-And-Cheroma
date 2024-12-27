@@ -16,6 +16,9 @@ class ChatInstance(models.Model):
     title = models.CharField(null=True, blank=True, max_length=100)
     created_at = models.DateTimeField(auto_now=True, auto_now_add=False)
 
+    class Meta:
+        ordering = ['-created_at']
+
 class QuestionHistory(models.Model):
     question = models.CharField(max_length=500)
     response = models.TextField(null=True , blank=True)

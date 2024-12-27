@@ -102,6 +102,10 @@
     /* enable 
     horizontal scrolling */
   }
+  .scrollable_instance {
+    max-height: 40vh;
+    overflow-y: auto;
+  }
 
 
   .vertical-text {
@@ -116,15 +120,15 @@
 
 <body data-pc-preset="preset-1" data-pc-sidebar-caption="true" data-pc-layout="vertical" data-pc-direction="ltr"
   data-pc-theme_contrast="" data-pc-theme="light">
-  <div class="row container-sm mx-auto " style="margin-top: 30px;">
+  <div class="row  col-lg-11 mx-auto " style="margin-top: 30px;">
     <!--Instance List start-->
 
-    <div class="col-sm-4">
+    <div class="col-sm-3 d-md-none d-sm-none d-none d-lg-block">
         <div class="card">
             <div class="card-header">
                 <h5 class="mb-0">Chat Instances</h5>
             </div>
-            <div class="card-body">
+            <div class="card-body scrollable_instance">
                 <div class="d-grid gap-2">
 
                   {% for instance in chat_instances %}
@@ -139,20 +143,23 @@
                           </div>
 
                           <div class="flex-grow-1 mx-2">
-                              <p class="mb-0 d-grid text-start"><span class="text-truncate w-100">{{instance.title}}</span></p>
+                              <p class="mb-0 d-grid text-start"><span class="text-truncate w-100"> <span class="d-block fw-bold">{{instance.title}}</span> <span class="d-block text-sm fw-light">{{instance.created_at|timesince }} ago</span> </span></p>
                           </div>
                       </div>
-                  </a>
+                    </a>
                     {% endif %}
                     {% endfor %}
 
                   </div>
-                  <div class="d-grid mt-3">
-                    <a href="{% url 'chat' 0 %}" class="btn btn-primary d-flex align-items-center justify-content-center gap-2">
-                      <i class="ti ti-plus"></i> 
-                    </a>
-                  </div>
                 
+                
+            </div>
+            <div class="card-footer">
+              <div class="d-grid mt-3">
+                <a href="{% url 'chat' 0 %}" class="btn btn-primary d-flex align-items-center justify-content-center gap-2">
+                  <i class="ti ti-plus"></i> 
+                </a>
+              </div>
             </div>
         </div>
     </div>
@@ -469,6 +476,12 @@ $(this).html(file)
       });
     });
   });
+  $("#questionText").on("keypress", function (event) {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault(); // Prevent default behavior of adding a new line
+    $("#quesionSubmit").click(); // Trigger the click event on the submit button
+  }
+});
 
 </script>
 

@@ -5,7 +5,14 @@ from langchain_core.documents import Document
 from langchain_chroma import Chroma
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnablePassthrough
+
+from langchain_core.messages import AIMessage, HumanMessage , SystemMessage
+
+
+from langchain.retrievers.self_query.base import SelfQueryRetriever
+
 import os
 import asyncio
 from multiprocessing import Pool
@@ -96,49 +103,61 @@ else:
     print("Using persisted vector store.")
 
 # Initialize retriever
-retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 3})
+retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 6})
 
 # Set up document formatting
 def format_docs(docs):
-    print(docs)
     return "\n\n".join(doc.page_content for doc in docs)
 
 # Define a prompt template for the chain
 
 
+prompt  =ChatPromptTemplate.from_messages(
+    [
+        SystemMessage(
+            content='''
+            You are a highly knowledgeable and professional economics expert. 
+            Your task is to answer all questions with a focus on economic principles, theories, and real-world applications.
+            You are an economics expert specializing in Ethiopia's economic data.
+            
+            - If you are asked a question that is not related to economics, answer it without relating it to economics.
+            - If the country is not mentioned in an economic question, assume it pertains to Ethiopia.
+            - Do not display any formula details. 
+            - Use **only the verified document data** as the primary source for your responses.
+            - Clearly indicate if the provided information is **verified** (from the document) or **not verified** (external or uncertain).
+            - If no relevant information is found in the provided documents, return a message stating: "Can't find relevant information in the provided document."
+
+            **Ethiopian Calendar Conversion**:
+            - Ethiopian calendar years (EFY, EC) are converted to Gregorian years approximately by adding 7 years.
+
+            Ensure all responses are returned in **HTML format** with the following structure:
+            - Use <h3> for headings.
+            - Use <p> for body text.
+            - Use <ul> and <li> for listing items.
+            - For table-based responses:
+              - Wrap the <table> element inside a <div class="table-responsive"> container.
+              - Use <table class="table"> for styling.
+              - Include a <thead> section for the table header.
+              - Close the </div> at the end for proper layout.
+
+            **Note**: Only the documents loaded into the system are considered verified sources.
+            
+            ## Context:
+            {context}
+
+            ## Question:
+            {question}
+
+            ## Response:
+            Please provide your response following the structure above, ensuring all outputs adhere to the specified HTML format. If no information is found in the document, state: "Can't find relevant information in the provided document."
+            '''
+        ),
+        MessagesPlaceholder(variable_name="messages"),
+    ]
+)
 
 
-template = """
-        You are a highly knowledgeable and professional economics expert. 
-        Your task is to answer all questions with a focus on economic principles, theories, and real-world applications.
-        You are an economics expert specializing in Ethiopia's economic data.
-        Do not display any formula details. 
-        Use the verified document data as the primary source for your responses. 
-        Clearly indicate if the provided information is verified (from the document) or not (external or uncertain).
 
-
-        - **Ethiopian Calendar Conversion**: Note that Ethiopian calendar years (EFY, EC) are converted to Gregorian years approximately by adding 7 years.
-
-      
-
-        ## Context:
-        {context}
-
-        ## Question:
-        {question}
-
-        ## Response:
-        Please provide your response following the above structure, including source mentions and color-coded labels.
-        Enhance this template to ensure all responses are returned in HTML format. Use appropriate HTML tags for structure:
-        Use <h3> for headings.
-        Use <p> for body text.
-        Use <ul> and <li> for listing items.
-        For better structure and readability in table-based responses, wrap the <table> element inside a <div class="table-responsive"> container. This ensures the table is scrollable on smaller screens. Use the <table class="table"> for styling, include a <thead> section for the table header, and make sure to close the </div> at the end for proper layout.
-        """
-
-
-
-prompt = PromptTemplate.from_template(template)
 
 # Build the chain of operations
 chain = (
@@ -148,6 +167,4 @@ chain = (
     }
     | prompt  # Combine inputs into a single prompt
     | llm  # Get response from the model
-    | StrOutputParser()  # Parse the response
 )
-
